@@ -1,4 +1,4 @@
-package pl.pjatk.MVCProjetct;
+package pl.pjatk.MVCProjetct.HomeWork;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

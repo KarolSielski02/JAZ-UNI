@@ -1,5 +1,6 @@
-package pl.pjatk.MVCProjetct;
+package pl.pjatk.MVCProjetct.Car.Controller;
 
+import pl.pjatk.MVCProjetct.Car.Model.Car;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,11 @@ public class testController {
     public String createCar(String car){
         System.out.println(car);
         return car;
+    }
+
+    @GetMapping("/Exception/ex")
+    public ResponseEntity<String> exception(){
+        throw new RuntimeException("TestingTesting");
     }
 
 }

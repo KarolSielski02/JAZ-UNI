@@ -1,4 +1,4 @@
-package pl.pjatk.MVCProjetct;
+package pl.pjatk.MVCProjetct.Car.Model;
 
 public class Car {
     private String model, make, color;
