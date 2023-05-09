@@ -10,6 +10,8 @@ import java.util.List;
 public class MovieService {
 
     static List<Movie> movieList = new ArrayList<>();
+    private String category;
+
     public MovieService() {
         movieList.add(new Movie(0, "Cars", "Action movie"));
         movieList.add(new Movie(1, "Cars 2", "Action movie"));
@@ -17,25 +19,37 @@ public class MovieService {
         movieList.add(new Movie(3, "Airplanes", "Action movie"));
     }
 
-    public int addMovie( String name, String category){
-
-        movieList.add(new Movie(movieList.size(), name, category));
-        return 0;
+    public Movie addMovie(String name, String category) {
+        Movie movie = new Movie(movieList.size() - 1, name, category);
+        System.out.println(movie);
+        movieList.add(movie);
+        return movie;
     }
 
-    public int removeMovie(int ID){
-        for (Movie movie : movieList){
-            if (movie.getID() == ID){
-                movieList.remove(movie);
-                return 0;
-            }
+    public Movie modifyMovie(int ID, String name, String category) {
+        Movie movie = findMovie(ID);
+
+        if (name == null || category == null) {
+            throw new NullPointerException();
         }
-        return 1;
+        movie.setName(name);
+        movie.setCategory(category);
+        System.out.println(movie);
+        System.out.println(movieList);
+        return movie;
     }
 
-    public Movie findMovie(int ID){
-        for (Movie movie : movieList){
-            if (movie.getID() == ID){
+    public void removeMovie(int ID) {
+        if (ID > movieList.size() || ID < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        movieList.removeIf(movie -> movie.getID() == ID);
+        System.out.println(movieList);
+    }
+
+    public Movie findMovie(int ID) {
+        for (Movie movie : movieList) {
+            if (movie.getID() == ID) {
                 return movie;
             }
         }

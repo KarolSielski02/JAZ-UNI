@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.pjatk.MovieService.Movie.Model.Movie;
 import pl.pjatk.MovieService.Movie.Service.MovieService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,23 +13,41 @@ import java.util.List;
 public class MovieController {
 
     MovieService movieService;
+
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
     @GetMapping("/movies")
-    public ResponseEntity<List<Movie>> returnMovieList(){
+    public ResponseEntity<List<Movie>> returnMovieList() {
         return ResponseEntity.status(HttpStatus.OK).body(movieService.getMovieList());
     }
 
     @GetMapping("/movies/{id}")
-    public ResponseEntity<Movie> returnMovie(@PathVariable String id){
+    public ResponseEntity<Movie> returnMovie(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(movieService.findMovie(Integer.parseInt(id)));
     }
 
-    @PostMapping("/addMovie")
-    public Movie createCar(@RequestBody Movie movie){
-        System.out.println(movie.toString());
-        return movieService
+    @PostMapping("/movies")
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+        if (movie == null) {
+            throw new NullPointerException("Wrong object");
+        }
+        String category = movie.getCategory();
+        String name = movie.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.addMovie(name, category));
+    }
+
+    @PutMapping("/movies/{id}")
+    public ResponseEntity<Movie> modifyMovie(@RequestBody Movie movie, @PathVariable String id) {
+        String category = movie.getCategory();
+        String name = movie.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.modifyMovie(Integer.parseInt(id), name, category));
+    }
+
+    @DeleteMapping("/movies/{id}")
+    public ResponseEntity<Void> modifyMovie(@PathVariable String id) {
+        movieService.removeMovie(Integer.parseInt(id));
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

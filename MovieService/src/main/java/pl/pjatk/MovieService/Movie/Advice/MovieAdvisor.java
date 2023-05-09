@@ -13,4 +13,10 @@ public class MovieAdvisor {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Exception occurred: " + e.getLocalizedMessage());
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> NullPointerException(NullPointerException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Exception occurred: " + e.getLocalizedMessage());
+    }
 }
