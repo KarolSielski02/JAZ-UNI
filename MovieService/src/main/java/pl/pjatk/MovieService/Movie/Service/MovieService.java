@@ -2,61 +2,56 @@ package pl.pjatk.MovieService.Movie.Service;
 
 import org.springframework.stereotype.Service;
 import pl.pjatk.MovieService.Movie.Model.Movie;
+import pl.pjatk.MovieService.Movie.MovieRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MovieService {
 
-    static List<Movie> movieList = new ArrayList<>();
-    private String category;
+    private final MovieRepository movieRepository;
 
-    public MovieService() {
-        movieList.add(new Movie(0, "Cars", "Action movie"));
-        movieList.add(new Movie(1, "Cars 2", "Action movie"));
-        movieList.add(new Movie(2, "Cars 3", "Action movie"));
-        movieList.add(new Movie(3, "Airplanes", "Action movie"));
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
     }
 
     public Movie addMovie(String name, String category) {
-        Movie movie = new Movie(movieList.size() - 1, name, category);
-        System.out.println(movie);
-        movieList.add(movie);
+        Movie movie = new Movie(Integer.parseInt(UUID.randomUUID().toString()), name, category);
+        movieRepository.save(movie);
         return movie;
     }
 
     public Movie modifyMovie(int ID, String name, String category) {
-        Movie movie = findMovie(ID);
-
-        if (name == null || category == null) {
-            throw new NullPointerException();
+        if (movieRepository.existsById(ID)) {
+            Movie movie = movieRepository.getById(ID);
+            if (name == null || category == null) {
+                throw new NullPointerException();
+            }
+            movie.setName(name);
+            movie.setCategory(category);
+            movieRepository.save(movie);
+            return movie;
+        } else {
+            throw new NullPointerException("ID doesn't exist");
         }
-        movie.setName(name);
-        movie.setCategory(category);
-        System.out.println(movie);
-        System.out.println(movieList);
-        return movie;
     }
 
     public void removeMovie(int ID) {
-        if (ID > movieList.size() || ID < 0) {
+        if (movieRepository.findById(ID).isEmpty()) {
             throw new ArrayIndexOutOfBoundsException();
+        } else {
+            movieRepository.deleteById(ID);
         }
-        movieList.removeIf(movie -> movie.getID() == ID);
-        System.out.println(movieList);
     }
 
     public Movie findMovie(int ID) {
-        for (Movie movie : movieList) {
-            if (movie.getID() == ID) {
-                return movie;
-            }
-        }
-        throw new ArrayIndexOutOfBoundsException();
+        return movieRepository.findById(ID).orElseThrow(NullPointerException::new);
     }
 
     public List<Movie> getMovieList() {
-        return movieList;
+        return movieRepository.findAll();
     }
 }

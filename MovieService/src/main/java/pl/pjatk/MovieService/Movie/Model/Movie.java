@@ -1,13 +1,23 @@
 package pl.pjatk.MovieService.Movie.Model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Movie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
-    private String category,name;
+    private String name;
+    private String category;
 
     public Movie(int ID, String name, String category) {
         this.ID = ID;
         this.name = name;
         this.category = category;
+    }
+
+    public Movie() {
+
     }
 
     public int getID() {
