@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.pjatk.MovieService.Movie.Model.Movie;
 import pl.pjatk.MovieService.Movie.MovieRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,7 +17,7 @@ public class MovieService {
     }
 
     public Movie addMovie(String name, String category) {
-        Movie movie = new Movie(Integer.parseInt(UUID.randomUUID().toString()), name, category);
+        Movie movie = new Movie(Integer.parseInt(UUID.randomUUID().toString()), name, category, false);
         movieRepository.save(movie);
         return movie;
     }
@@ -53,5 +51,21 @@ public class MovieService {
 
     public List<Movie> getMovieList() {
         return movieRepository.findAll();
+    }
+
+    public Movie changeAvailability(int ID){
+        if (movieRepository.findById(ID).isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException();
+        } else {
+            Movie movie = movieRepository.getById(ID);
+            boolean bolVar = movieRepository.changeAvailabilityForID(ID);
+            if(bolVar){
+                movie.setAvailable(false);
+            }else {
+                movie.setAvailable(true);
+            }
+            movieRepository.save(movie);
+            return movie;
+        }
     }
 }

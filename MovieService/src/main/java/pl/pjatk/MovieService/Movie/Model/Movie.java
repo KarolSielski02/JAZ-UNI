@@ -9,15 +9,25 @@ public class Movie {
     private int ID;
     private String name;
     private String category;
+    private Boolean is_available;
 
-    public Movie(int ID, String name, String category) {
+    public Movie(int ID, String name, String category, Boolean is_available) {
         this.ID = ID;
         this.name = name;
         this.category = category;
+        this.is_available = is_available;
     }
 
     public Movie() {
 
+    }
+
+    public Boolean getAvailable() {
+        return is_available;
+    }
+
+    public void setAvailable(Boolean available) {
+        is_available = available;
     }
 
     public int getID() {

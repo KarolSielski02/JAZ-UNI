@@ -38,6 +38,11 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(movieService.addMovie(name, category));
     }
 
+    @GetMapping("/change/{id}")
+    public ResponseEntity<Movie> changeAvailability(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeAvailability(Integer.parseInt(id)));
+    }
+
     @PutMapping("/movies/{id}")
     public ResponseEntity<Movie> modifyMovie(@RequestBody Movie movie, @PathVariable String id) {
         String category = movie.getCategory();
