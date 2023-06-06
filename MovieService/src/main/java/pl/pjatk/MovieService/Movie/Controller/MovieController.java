@@ -39,8 +39,8 @@ public class MovieController {
     }
 
     @GetMapping("/change/{id}")
-    public ResponseEntity<Movie> changeAvailability(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeAvailability(Integer.parseInt(id)));
+    public ResponseEntity<String> changeAvailability(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body("Success, return value: " + movieService.changeAvailability(Integer.parseInt(id)));
     }
 
     @PutMapping("/movies/{id}")

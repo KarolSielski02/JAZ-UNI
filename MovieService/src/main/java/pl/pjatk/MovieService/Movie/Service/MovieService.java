@@ -5,6 +5,7 @@ import pl.pjatk.MovieService.Movie.Model.Movie;
 import pl.pjatk.MovieService.Movie.MovieRepository;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -17,20 +18,20 @@ public class MovieService {
     }
 
     public Movie addMovie(String name, String category) {
-        Movie movie = new Movie(Integer.parseInt(UUID.randomUUID().toString()), name, category, false);
-        movieRepository.save(movie);
+        Movie movie = new Movie(generateId(), name,category,false);
+        movieRepository.addMovie(name,category);
         return movie;
     }
 
     public Movie modifyMovie(int ID, String name, String category) {
-        if (movieRepository.existsById(ID)) {
+        if (movieRepository.getById(ID) != null) {
             Movie movie = movieRepository.getById(ID);
             if (name == null || category == null) {
                 throw new NullPointerException();
             }
             movie.setName(name);
             movie.setCategory(category);
-            movieRepository.save(movie);
+            movieRepository.updateMovieByIDAndNameAndCategory(name,category,ID);
             return movie;
         } else {
             throw new NullPointerException("ID doesn't exist");
@@ -38,7 +39,7 @@ public class MovieService {
     }
 
     public void removeMovie(int ID) {
-        if (movieRepository.findById(ID).isEmpty()) {
+        if (movieRepository.getById(ID) == null) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
             movieRepository.deleteById(ID);
@@ -46,26 +47,40 @@ public class MovieService {
     }
 
     public Movie findMovie(int ID) {
-        return movieRepository.findById(ID).orElseThrow(NullPointerException::new);
+        if (movieRepository.getById(ID) == null){
+            throw new NullPointerException();
+        }else {
+            return movieRepository.getById(ID);
+        }
     }
 
     public List<Movie> getMovieList() {
         return movieRepository.findAll();
     }
 
-    public Movie changeAvailability(int ID){
-        if (movieRepository.findById(ID).isEmpty()) {
+    public int changeAvailability(int ID){
+        if (movieRepository.getById(ID) == null) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
-            Movie movie = movieRepository.getById(ID);
-            boolean bolVar = movieRepository.changeAvailabilityForID(ID);
-            if(bolVar){
-                movie.setAvailable(false);
-            }else {
-                movie.setAvailable(true);
-            }
-            movieRepository.save(movie);
-            return movie;
+            movieRepository.changeAvailabilityForID(ID);
+            return 0;
         }
+    }
+
+    public static int generateId() {
+        int idLength = 10;
+        int minIdValue = (int) Math.pow(10, idLength - 1);
+        int maxIdValue = (int) Math.pow(10, idLength) - 1;
+
+        Random random = new Random();
+        return random.nextInt(maxIdValue - minIdValue + 1) + minIdValue;
+    }
+
+    public static int generateId(int idLength) {
+        int minIdValue = (int) Math.pow(10, idLength - 1);
+        int maxIdValue = (int) Math.pow(10, idLength) - 1;
+
+        Random random = new Random();
+        return random.nextInt(maxIdValue - minIdValue + 1) + minIdValue;
     }
 }
