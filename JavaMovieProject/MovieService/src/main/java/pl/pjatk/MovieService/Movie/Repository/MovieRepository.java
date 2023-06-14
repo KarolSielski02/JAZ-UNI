@@ -1,4 +1,4 @@
-package pl.pjatk.MovieService.Movie;
+package pl.pjatk.MovieService.Movie.Repository;
 
 import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
@@ -16,7 +16,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE movie SET is_available = 1 WHERE ID = ?1", nativeQuery = true)
-    void changeAvailabilityForID(Integer ID);
+    void changeToAvailableForID(Integer ID);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE movie SET is_available = 0 WHERE ID = ?1", nativeQuery = true)
+    void changeToUnavailableForID(Integer ID);
 
     @Query(value = "SELECT * FROM movie WHERE ID = ?1", nativeQuery = true)
     Movie getById(Integer ID);

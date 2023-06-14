@@ -2,11 +2,10 @@ package pl.pjatk.MovieService.Movie.Service;
 
 import org.springframework.stereotype.Service;
 import pl.pjatk.MovieService.Movie.Model.Movie;
-import pl.pjatk.MovieService.Movie.MovieRepository;
+import pl.pjatk.MovieService.Movie.Repository.MovieRepository;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class MovieService {
@@ -58,12 +57,21 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public int changeAvailability(int ID){
+    public Movie changeToAvailable(int ID){
         if (movieRepository.getById(ID) == null) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
-            movieRepository.changeAvailabilityForID(ID);
-            return 0;
+            movieRepository.changeToAvailableForID(ID);
+            return movieRepository.getById(ID);
+        }
+    }
+
+    public Movie changeToUnavailable(int ID) {
+        if (movieRepository.getById(ID) == null) {
+            throw new ArrayIndexOutOfBoundsException();
+        } else {
+            movieRepository.changeToUnavailableForID(ID);
+            return movieRepository.getById(ID);
         }
     }
 
@@ -83,4 +91,5 @@ public class MovieService {
         Random random = new Random();
         return random.nextInt(maxIdValue - minIdValue + 1) + minIdValue;
     }
+
 }

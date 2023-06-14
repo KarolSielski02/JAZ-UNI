@@ -1,11 +1,5 @@
-package pl.pjatk.MovieService.Movie.Model;
-
-import jakarta.persistence.*;
-
-@Entity
+package pl.pjatk.RentalService.Movie.Model;
 public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
     private String name;
     private String category;
@@ -60,6 +54,7 @@ public class Movie {
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", category='" + category + '\'' +
+                ", is_available=" + is_available +
                 '}';
     }
 }

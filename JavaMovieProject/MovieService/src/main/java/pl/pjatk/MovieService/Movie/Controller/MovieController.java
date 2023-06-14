@@ -38,9 +38,14 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(movieService.addMovie(name, category));
     }
 
-    @GetMapping("/change/{id}")
-    public ResponseEntity<String> changeAvailability(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body("Success, return value: " + movieService.changeAvailability(Integer.parseInt(id)));
+    @GetMapping("/changeToAvailable/{id}")
+    public ResponseEntity<Movie> changeToAvailable(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToAvailable(Integer.parseInt(id)));
+    }
+
+    @GetMapping("/changeToUnavailable/{id}")
+    public ResponseEntity<Movie> changeToUnavailable(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToUnavailable(Integer.parseInt(id)));
     }
 
     @PutMapping("/movies/{id}")
