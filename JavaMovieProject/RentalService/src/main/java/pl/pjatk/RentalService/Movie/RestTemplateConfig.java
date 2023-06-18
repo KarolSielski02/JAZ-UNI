@@ -1,4 +1,4 @@
-package pl.pjatk.RentalService.Movie.Controller;
+package pl.pjatk.RentalService.Movie;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +9,8 @@ public class RestTemplateConfig {
 
     @Bean
     public RestTemplate restTemplate(){
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
+        return restTemplate;
     }
 }

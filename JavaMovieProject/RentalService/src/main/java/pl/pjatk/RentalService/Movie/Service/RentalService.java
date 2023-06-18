@@ -1,12 +1,10 @@
 package pl.pjatk.RentalService.Movie.Service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import pl.pjatk.RentalService.Movie.Advice.RentalAdvisor;
+import pl.pjatk.RentalService.Movie.Advice.RentControllerAdvice;
 import pl.pjatk.RentalService.Movie.Model.Movie;
 
 import java.net.ConnectException;
@@ -22,13 +20,8 @@ public class RentalService {
         this.restTemplate = restTemplate;
     }
 
-    Map<String, String> pathVariables = new HashMap<>();
-
     public Movie getMovie(Long id) {
-        String url = "http://localhost:8080/MoviesController/movies/{id}";
-        pathVariables.clear();
-        pathVariables.put("id", id.toString());
-        ResponseEntity<Movie> response = restTemplate.getForEntity(url, Movie.class, pathVariables);
+        ResponseEntity<Movie> response = restTemplate.getForEntity("http://localhost:8080/MoviesController/movies/" + id, Movie.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
         if (statusCode == HttpStatus.OK) {
@@ -39,33 +32,30 @@ public class RentalService {
         return null;
     }
 
-    public Movie changeToAvailable(Long id) {
-        String url = "http://localhost:8080/MoviesController/changeToAvailable/{id}";
-        pathVariables.clear();
-        pathVariables.put("id", id.toString());
-        ResponseEntity<Movie> response = restTemplate.getForEntity(url, Movie.class, pathVariables);
-
-        HttpStatusCode statusCode = response.getStatusCode();
-        if (statusCode == HttpStatus.OK) {
-            return response.getBody();
+    public int changeToAvailable(Long id) {
+        Movie someMovie = new Movie();
+        someMovie.setAvailable(false);
+        HttpEntity<Movie> entity = new HttpEntity<>(someMovie);
+        ResponseEntity response = restTemplate.exchange("http://localhost:8080/MoviesController/changeToAvailable/" + id, HttpMethod.PUT, entity  ,Void.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return 0;
         } else {
-            statusHandler(statusCode);
+            statusHandler(response.getStatusCode());
         }
-        return null;
+        return 1;
     }
 
-    public Movie changeToUnavailable(Long id) {
-        String url = "http://localhost:8080/MoviesController/changeToUnavailable/{id}";
-        pathVariables.clear();
-        pathVariables.put("id", id.toString());
-        ResponseEntity<Movie> response = restTemplate.getForEntity(url, Movie.class, pathVariables);
-        HttpStatusCode statusCode = response.getStatusCode();
-        if (statusCode == HttpStatus.OK) {
-            return response.getBody();
+    public int changeToUnavailable(Long id) {
+        Movie someMovie = new Movie();
+        someMovie.setAvailable(true);
+        HttpEntity<Movie> entity = new HttpEntity<>(someMovie);
+        ResponseEntity response = restTemplate.exchange("http://localhost:8080/MoviesController/changeToUnavailable/" + id, HttpMethod.PUT, entity  ,Void.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return 0;
         } else {
-            statusHandler(statusCode);
+            statusHandler(response.getStatusCode());
         }
-        return null;
+        return 1;
     }
 
     private void statusHandler(HttpStatusCode statusCode) {
