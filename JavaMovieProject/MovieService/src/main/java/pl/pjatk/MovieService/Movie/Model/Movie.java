@@ -6,9 +6,13 @@ import jakarta.persistence.*;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private int ID;
+    @Column(name = "Name")
     private String name;
+    @Column(name = "Category")
     private String category;
+    @Column(name = "is_available")
     private Boolean is_available;
 
     public Movie(int ID, String name, String category, Boolean is_available) {

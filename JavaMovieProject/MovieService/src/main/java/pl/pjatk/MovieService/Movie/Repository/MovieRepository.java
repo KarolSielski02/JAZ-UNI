@@ -1,5 +1,8 @@
 package pl.pjatk.MovieService.Movie.Repository;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

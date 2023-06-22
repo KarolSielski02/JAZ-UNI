@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/MoviesController")
 public class MovieController {
 
-    MovieService movieService;
+    private final MovieService movieService;
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
@@ -30,7 +30,7 @@ public class MovieController {
 
     @PostMapping("/movies")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        if (movie == null) {
+        if (movie.getCategory() == null || movie.getName() == null) {
             throw new NullPointerException("Wrong object");
         }
         String category = movie.getCategory();
@@ -38,21 +38,21 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(movieService.addMovie(name, category));
     }
 
-    @GetMapping("/changeToAvailable/{id}")
-    public ResponseEntity<Movie> changeToAvailable(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToAvailable(Integer.parseInt(id)));
-    }
-
-    @GetMapping("/changeToUnavailable/{id}")
-    public ResponseEntity<Movie> changeToUnavailable(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToUnavailable(Integer.parseInt(id)));
-    }
-
     @PutMapping("/movies/{id}")
     public ResponseEntity<Movie> modifyMovie(@RequestBody Movie movie, @PathVariable String id) {
         String category = movie.getCategory();
         String name = movie.getName();
         return ResponseEntity.status(HttpStatus.OK).body(movieService.modifyMovie(Integer.parseInt(id), name, category));
+    }
+
+    @PutMapping("/changeToAvailable/{id}")
+    public ResponseEntity<Movie> changeToAvailable(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToAvailable(Integer.parseInt(id)));
+    }
+
+    @PutMapping("/changeToUnavailable/{id}")
+    public ResponseEntity<Movie> changeToUnavailable(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.changeToUnavailable(Integer.parseInt(id)));
     }
 
     @DeleteMapping("/movies/{id}")
